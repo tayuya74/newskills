@@ -176,3 +176,112 @@
 //   return i * 2
 // })
 // console.log(numArray)
+
+//Объекты и прототипы
+// let car = {
+// 	name: 'Tesla',
+// 	year: '2020'
+// }
+
+// console.log(car)
+
+//как работают прототипы
+// function Car(name, year) {
+// 	this.name = name
+// 	this.year = year
+// }
+
+// //создаем функции для материнского Car и потом можем применять его ко всем объектам через ford.Age()
+// Car.prototype.Age = function() {
+// 	return new Date().getFullYear() - this.year
+// }
+
+// //создаем дочерние элементы по типу Car
+// let ford = new Car('Ford', 2015)
+// let bmw = new Car('BMW', 2017)
+// console.log(ford)
+// console.log(bmw)
+
+//создание и настройка объекта 
+// let ford = Object.create({
+// 	calculateDistancePerYear: function() {
+// 		Object.defineProperty(this, 'distancePerYear', {
+// 			value: Math.ceil(this.distance / this.age),
+// 			enumerable: true,
+// 			writable: false,
+// 			configurable: false 
+// 		})
+// 	}
+// }, {
+// 	name: {
+// 		value: 'Ford',
+// 		enumerable: true,
+// 		writable: false,
+// 		configurable: false
+// 	},
+// 	model: {
+// 		value: 'Focus',
+// 		enumerable: true,
+// 		writable: false,
+// 		configurable: false
+// 	},
+// 	year: {
+// 		value: 2015,
+// 		enumerable: true,
+// 		writable: false,
+// 		configurable: false
+// 	}, 
+// 	distance: {
+// 		value: 120500,
+// 		enumerable: true,
+// 		writable: true,
+// 		configurable: false
+// 	}, 
+// 	age: {
+// 		enumerable: true,
+// 		get: function() {
+// 			console.log('получаем возраст')
+// 			return new Date().getFullYear() - this.year
+// 		},
+// 		set: function() {
+// 			console.log('устанавливаем значение')
+// 		}
+// 	}
+// })
+
+// console.log(ford)
+
+//посмотреть все ключи объекта (смотрит даже вглубь прототипа)
+// for (let key in ford) {
+// 	console.log(key)
+// }
+
+// //если нужны все ключи только первого уровня, то добавляем if
+// for (let key in ford) {
+// 	if (ford.hasOwnProperty(key)) {
+// 		console.log(key, ford[key])
+// 	}
+// }
+
+//Задача по удвоению массива без изменения текущего, а с возвратом нового
+let a = [1, 2, 3]
+let b = [5, "hello", 6]
+
+Array.prototype.double = function() {
+	let newArray = this.map(function(item) {
+		if (typeof item === 'number') {
+			return Math.pow(item, 2)
+		}
+		if (typeof item === 'string') {
+			 return item += item
+		}
+	})
+
+	return newArray
+}
+
+let newA = a.double()
+let newB = b.double()
+
+console.log('A', newA.double())
+console.log('B', newB)
