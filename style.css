@@ -1,4 +1,4 @@
-.layout{
+/* .layout{
     display: flex;
 }
 
@@ -29,7 +29,6 @@
 }
 }
 
-
 .box1 {
     margin: 150px 50px;
     display: flex;
@@ -45,4 +44,49 @@
     height: 150px;
     background: grey;
 }
+ */
 
+ 
+/*dropdown меню*/
+.app {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+.dropdown {
+    position: relative;
+    width: 400px;
+}
+
+.dropdown_label {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+    width: 100%;
+    cursor: pointer;
+}
+.dropdown_menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: none;
+    border-radius: 5px;
+    border: 1px solid black; 
+}
+
+.dropdown.open .dropdown_menu {
+    display: block;
+}
+
+.dropdown_menu li {
+    padding: 5px 10px;
+}
+
+.dropdown_menu li:hover {
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer
+}
