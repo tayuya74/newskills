@@ -336,54 +336,135 @@
 // ul.insertAdjacentHTML('afterbegin', yandex)
 
 //dropdown меню
-class Dropdown {
-	 constructor(selector, options) {
-		this.$el = document.querySelector(selector)
-		this.items = options.items
+// class Dropdown {
+// 	 constructor(selector, options) {
+// 		this.$el = document.querySelector(selector)
+// 		this.items = options.items
 
-		this.$el.querySelector('.dropdown_label').textContent = this.items[0].label
+// 		this.$el.querySelector('.dropdown_label').textContent = this.items[0].label
 
-		this.$el.addEventListener('click', event => {
-			if (event.target.classList.contains('dropdown_label')) {
-				if (this.$el.classList.contains('open')) {
-					this.close()
-				} else {
-					this.open()
-				}
-			} else if (event.target.tagName.toLowerCase() === 'li') {
-				this.select(event.target.dataset.id)
+// 		this.$el.addEventListener('click', event => {
+// 			if (event.target.classList.contains('dropdown_label')) {
+// 				if (this.$el.classList.contains('open')) {
+// 					this.close()
+// 				} else {
+// 					this.open()
+// 				}
+// 			} else if (event.target.tagName.toLowerCase() === 'li') {
+// 				this.select(event.target.dataset.id)
 
+// 			}
+// 		})
+
+// 		const itemsHTML = this.items.map(i => {
+// 			return `<li data-id="${i.id}">${i.label}</li>`
+// 		}).join('')
+
+// 		this.$el.querySelector('.dropdown_menu').insertAdjacentHTML('afterbegin', itemsHTML)
+// 	}
+
+// 	select(id) {
+// 		const item = this.items.find(i => i.id === id)
+// 		this.$el.querySelector('.dropdown_label').textContent = item.label
+// 		this.close()
+// 	}
+
+// 	open() {
+// 		this.$el.classList.add('open')
+// 	}
+
+// 	close() {
+// 		this.$el.classList.remove('open')
+// 	}
+
+// }
+
+// const dropdown = new Dropdown('#dropdown', {
+// 	items: [
+// 		{label: 'Москва', id: 'msk'},
+// 		{label: 'Санкт-Петербург', id: 'spb'},
+// 		{label: 'Челябинск', id: 'chel'},
+// 		{label: 'Пятигорск', id: 'pt'}
+// 	]
+// })
+
+// задание к уроку 70 реализовать MyPromise, чтобы работал как promise
+// как работают промисы :
+// let promise = new Promise((resolve, reject) => {
+// 	setTimeout(() => {
+// 		  resolve({id: 2})
+// 	}, 2000)
+// })
+
+// promise
+// .then(num => num *=2)
+// .catch(err => console.log(err))
+// .then(num => num *=3)
+// .finally(() => console.log('finally'))
+
+//самостоятельная реализация промиса
+class MyPromise {
+	constructor(callback) {
+		this.onCatch = null
+		this.onFinally = null 
+		this.thenCbs = []
+		this.isRejected = false
+
+		function resolver(data) {
+			if (this.isRejected) {
+				return
 			}
-		})
+			 
+			this.thenCbs.forEach(cb => {
+				data = cb(data) 
+			})
 
-		const itemsHTML = this.items.map(i => {
-			return `<li data-id="${i.id}">${i.label}</li>`
-		}).join('')
+			if (this.onFinally) {
+				this.onFinally
+			}
+		}
 
-		this.$el.querySelector('.dropdown_menu').insertAdjacentHTML('afterbegin', itemsHTML)
+		function rejecter(error) {
+			this.isRejected = true
+			if (this.onCatch) {
+				this.onCatch(error)
+			}
+
+			if (this.onFinally) {
+				this.onFinally
+			}
+		}
+
+		callback(resolver.bind(this), rejecter.bind(this))
 	}
 
-	select(id) {
-		const item = this.items.find(i => i.id === id)
-		this.$el.querySelector('.dropdown_label').textContent = item.label
-		this.close()
+	then(cb) {
+		this.thenCbs.push(cb)
+		return this
 	}
 
-	open() {
-		this.$el.classList.add('open')
+	catch(cb) {
+		this.onCatch = cb
+		return this
 	}
 
-	close() {
-		this.$el.classList.remove('open')
+	finally(cb) {
+		this.onFinally = cb
+		return this
 	}
-
 }
 
-const dropdown = new Dropdown('#dropdown', {
-	items: [
-		{label: 'Москва', id: 'msk'},
-		{label: 'Санкт-Петербург', id: 'spb'},
-		{label: 'Челябинск', id: 'chel'},
-		{label: 'Пятигорск', id: 'pt'}
-	]
+const promise = new MyPromise((resolve, reject) => {
+	setTimeout(() => {
+		reject('SOME ERROR')
+		resolve(60)
+	}, 2000)
 })
+
+promise
+.then(num => num *=2)
+.catch(err => console.log(err))
+.then(num => num *=3)
+.finally(() => console.log('finally'))
+.then(num => console.log('Done', num))
+  
